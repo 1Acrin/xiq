@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七夕·我想和你在一起</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 背景与整体氛围 */
+        body {
+            min-height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fdeff9 0%, #ec38bc 50%, #7303c0 100%);
+            background-attachment: fixed;
+            font-family: 'Microsoft YaHei', 'Heiti SC', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* 标题样式 */
+        .title-container {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .main-title {
+            font-size: 2.8rem;
+            color: #fff;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .sub-title {
+            font-size: 1.2rem;
+            color: #fef3ff;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        /* 问题卡片（核心交互区） */
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            width: 100%;
+            max-width: 700px;
+            padding: 60px 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(115, 3, 192, 0.2);
+            text-align: center;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .question {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 70px;
+            line-height: 1.6;
+        }
+
+        /* 提示文本样式（替代弹窗） */
+        .message-bubble {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        /* 按钮样式 */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+            height: 100px;
+        }
+
+        .proposal-btn {
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 同意按钮（粉色系） */
+        .agree-btn {
+            background: linear-gradient(120deg, #ff6b9e, #ec38bc);
+            color: #fff;
+            z-index: 2;
+        }
+
+        .agree-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(236, 56, 188, 0.3);
+            background: linear-gradient(120deg, #ff85b0, #f14aa8);
+        }
+
+        /* 不同意按钮 */
+        .disagree-btn {
+            background: #e0e0e0;
+            color: #666;
+            position: relative;
+            z-index: 1;
+            transition: all 0.15s cubic-bezier(0.21, 0.98, 0.6, 0.99);
+        }
+
+        .disagree-btn:hover {
+            background: #d0d0d0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 花瓣特效容器 */
+        .petal-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* 底部小提示 */
+        .tip {
+            position: fixed;
+            bottom: 20px;
+            color: #fff;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 动画定义 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 按钮抖动动画 */
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        /* 消息气泡动画 */
+        @keyframes messagePop {
+            0% { opacity: 0; transform: translateY(10px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 500px) {
+            .main-title {
+                font-size: 2.2rem;
+            }
+            .question {
+                font-size: 1.3rem;
+            }
+            .btn-group {
+                flex-direction: column;
+                gap: 20px;
+                height: 180px;
+            }
+            .proposal-btn {
+                padding: 12px 28px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 花瓣特效容器 -->
+    <div class="petal-container" id="petalContainer"></div>
+
+    <!-- 标题区域 -->
+    <div class="title-container">
+        <h1 class="main-title">七夕·我想对你说</h1>
+        <p class="sub-title">往后余生，风雪是你，平淡是你</p>
+    </div>
+
+    <!-- 核心问题卡片 -->
+    <div class="question-card">
+        <p class="question">亲爱的，我想和你共度余生<br>你愿意嫁给我吗？</p>
+        
+        <!-- 消息气泡（替代弹窗） -->
+        <div class="message-bubble" id="messageBubble"></div>
+        
+        <div class="btn-group" id="btnGroup">
+            <!-- 同意按钮（跳转情书） -->
+            <button class="proposal-btn agree-btn" onclick="window.location.href='/letter'">
+                我愿意
+            </button>
+            <!-- 不同意按钮（超快速移动） -->
+            <button class="proposal-btn disagree-btn" id="disagreeBtn">
+                再考虑考虑
+            </button>
+        </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="tip">点击「我愿意」查看我的心意 💌</div>
+
+    <script>
+        // 不同意按钮：无弹窗版本
+        const disagreeBtn = document.getElementById('disagreeBtn');
+        const btnGroup = document.getElementById('btnGroup');
+        const card = document.querySelector('.question-card');
+        const messageBubble = document.getElementById('messageBubble');
+        
+        // 跟踪被拒绝的次数
+        let rejectionCount = 0;
+        
+        // 初始化按钮位置
+        let currentX = 0;
+        let currentY = 0;
+        
+        // 显示浮动消息（替代弹窗）
+        function showMessage(message) {
+            // 设置消息内容
+            messageBubble.textContent = message;
+            
+            // 定位在按钮上方
+            const btnRect = disagreeBtn.getBoundingClientRect();
+            const cardRect = card.getBoundingClientRect();
+            
+            messageBubble.style.left = `${btnRect.left - cardRect.left + btnRect.width/2}px`;
+            messageBubble.style.top = `${btnRect.top - cardRect.top - 30}px`;
+            messageBubble.style.transform = 'translateX(-50%)';
+            
+            // 显示并添加动画
+            messageBubble.style.opacity = '1';
+            messageBubble.style.animation = 'messagePop 1.5s ease';
+            
+            // 动画结束后隐藏
+            setTimeout(() => {
+                messageBubble.style.opacity = '0';
+                messageBubble.style.animation = '';
+            }, 1500);
+        }
+        
+        // 获取可移动范围
+        function getMovementBounds() {
+            const cardRect = card.getBoundingClientRect();
+            const btnRect = disagreeBtn.getBoundingClientRect();
+            const groupRect = btnGroup.getBoundingClientRect();
+            
+            const maxLeft = cardRect.width - btnRect.width - 10;
+            const maxTop = (window.innerWidth <= 500) ? 
+                groupRect.height - btnRect.height - 10 : 200;
+                
+            return { maxLeft, maxTop };
+        }
+        
+        // 生成移动参数
+        function getRandomMovement() {
+            const baseDistance = 120 + (rejectionCount * 30);
+            const maxDistance = Math.min(baseDistance, 350);
+            
+            const deltaX = (Math.random() - 0.5) * 2 * maxDistance;
+            const deltaY = (Math.random() - 0.5) * 2 * (maxDistance * 0.9);
+            const rotation = (Math.random() - 0.5) * 40;
+            const duration = 0.08 + Math.random() * 0.17;
+            
+            return { deltaX, deltaY, rotation, duration };
+        }
+        
+        // 移动按钮
+        function moveButton() {
+            const { maxLeft, maxTop } = getMovementBounds();
+            const { deltaX, deltaY, rotation, duration } = getRandomMovement();
+            
+            let newX = currentX + deltaX;
+            let newY = currentY + deltaY;
+            
+            newX = Math.max(0, Math.min(newX, maxLeft));
+            newY = Math.max(0, Math.min(newY, maxTop));
+            
+            disagreeBtn.style.transition = `all ${duration}s cubic-bezier(0.21, 0.98, 0.6, 0.99)`;
+            disagreeBtn.style.left = `${newX}px`;
+            disagreeBtn.style.top = `${newY}px`;
+            disagreeBtn.style.transform = `rotate(${rotation}deg)`;
+            
+            currentX = newX;
+            currentY = newY;
+            
+            setTimeout(() => {
+                disagreeBtn.style.transition = `transform 0.2s ease`;
+                disagreeBtn.style.transform = `rotate(0deg)`;
+            }, duration * 1000);
+        }
+        
+        // 鼠标在按钮附近移动触发
+        disagreeBtn.addEventListener('mousemove', () => {
+            if (Math.random() > 0.5) {
+                moveButton();
+            }
+        });
+        
+        // 鼠标进入时移动
+        disagreeBtn.addEventListener('mouseenter', () => {
+            moveButton();
+            if (Math.random() > 0.3) {
+                setTimeout(moveButton, 80);
+            }
+            
+            rejectionCount++;
+            
+            // 显示浮动消息（无弹窗）
+            const messages = [
+                "太快了抓不到我！",
+                "根本停不下来！",
+                "放弃吧，点同意吧~",
+                "速度太快啦！",
+                "你追不上我的！",
+                "哈哈哈，抓不到！",
+                "别费劲了，选同意吧！"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            showMessage(randomMessage);
+            
+            // 抖动效果
+            if (rejectionCount >= 1) {
+                disagreeBtn.style.animation = "shake 0.3s ease infinite";
+                setTimeout(() => {
+                    disagreeBtn.style.animation = "";
+                }, 1000);
+            }
+            
+            if (rejectionCount >= 3) {
+                setTimeout(moveButton, 50);
+                setTimeout(moveButton, 100);
+            }
+        });
+        
+        // 点击按钮时移动
+        disagreeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButton();
+            setTimeout(moveButton, 50);
+            setTimeout(moveButton, 100);
+            
+            rejectionCount++;
+            
+            if (rejectionCount >= 2) {
+                showMessage("别挣扎了，我知道你的答案是同意！");
+            }
+        });
+        
+        // 窗口大小变化处理
+        window.addEventListener('resize', () => {
+            const { maxLeft, maxTop } = getMovementBounds();
+            currentX = Math.max(0, Math.min(currentX, maxLeft));
+            currentY = Math.max(0, Math.min(currentY, maxTop));
+            
+            disagreeBtn.style.left = `${currentX}px`;
+            disagreeBtn.style.top = `${currentY}px`;
+        });
+
+        // 花瓣效果
+        function createPetal() {
+            const petalContainer = document.getElementById('petalContainer');
+            const petal = document.createElement('div');
+            
+            const size = Math.floor(Math.random() * 15) + 10;
+            const color = Math.random() > 0.5 ? '#ffd6e0' : '#ffe6f2';
+            const left = Math.floor(Math.random() * 100);
+            const fallTime = Math.floor(Math.random() * 10) + 10;
+            const delay = Math.floor(Math.random() * 5);
+
+            petal.style.position = 'absolute';
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.backgroundColor = color;
+            petal.style.borderRadius = '50% 0 50% 50%';
+            petal.style.left = `${left}%`;
+            petal.style.top = '-20px';
+            petal.style.animation = `fall ${fallTime}s linear ${delay}s infinite`;
+            petal.style.opacity = '0.8';
+
+            petalContainer.appendChild(petal);
+
+            setTimeout(() => {
+                petal.remove();
+            }, (fallTime + delay) * 1000);
+        }
+
+        setInterval(createPetal, 1000);
+        for (let i = 0; i < 10; i++) {
+            createPetal();
+        }
+    </script>
+</body>
+</html>
+    

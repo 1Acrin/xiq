@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给你的一封情书</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 背景氛围 */
+        body {
+            min-height: 100vh;
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            font-family: 'STKaiti', 'KaiTi', serif; /* 楷体增强书信感 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* 信纸样式 */
+        .letter-paper {
+            background: #fff;
+            width: 100%;
+            max-width: 700px;
+            padding: 60px 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            /* 信纸纹理 */
+            background-image: 
+                linear-gradient(#eee 1px, transparent 1px),
+                linear-gradient(90deg, #eee 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        /* 信封装饰（顶部丝带） */
+        .letter-ribbon {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 30px;
+            background: linear-gradient(120deg, #ff6b9e, #ec38bc);
+            border-radius: 5px 5px 0 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 情书标题 */
+        .letter-title {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #d63384;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        /* 情书内容 */
+        .letter-content {
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 2;
+            text-align: justify;
+            margin-bottom: 50px;
+        }
+
+        .letter-content p {
+            margin-bottom: 25px;
+            text-indent: 2em; /* 首行缩进（中文书信规范） */
+        }
+
+        /* 署名区域 */
+        .letter-signature {
+            text-align: right;
+            font-size: 1.1rem;
+            color: #555;
+            margin-right: 40px;
+        }
+
+        .signature-name {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #d63384;
+        }
+
+        .signature-date {
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* 爱心装饰 */
+        .heart-decoration {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b9e;
+            transform: rotate(45deg);
+            opacity: 0.7;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* 角落爱心位置 */
+        .heart1 { top: 20px; left: 20px; }
+        .heart2 { top: 20px; right: 20px; }
+        .heart3 { bottom: 20px; left: 20px; }
+        .heart4 { bottom: 20px; right: 20px; }
+
+        /* 动画定义 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: rotate(45deg) translateY(0); }
+            50% { transform: rotate(45deg) translateY(-8px); }
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 600px) {
+            .letter-paper {
+                padding: 40px 20px;
+            }
+            .letter-title {
+                font-size: 1.5rem;
+            }
+            .letter-content {
+                font-size: 1rem;
+                line-height: 1.8;
+            }
+            .letter-signature {
+                margin-right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 信纸主体 -->
+    <div class="letter-paper">
+        <!-- 顶部丝带装饰 -->
+        <div class="letter-ribbon"></div>
+
+        <!-- 角落爱心装饰 -->
+        <div class="heart-decoration heart1"></div>
+        <div class="heart-decoration heart2"></div>
+        <div class="heart-decoration heart3"></div>
+        <div class="heart-decoration heart4"></div>
+
+        <!-- 情书标题 -->
+        <h2 class="letter-title">致我最爱的你</h2>
+
+        <!-- 情书内容（请替换成你的真实心意） -->
+        <div class="letter-content">
+            <p>亲爱的：次央大宝宝</p>
+            
+            <p>当你看到这封信时，我想我一定比此刻更紧张——因为我终于等到了我最期待的答案。（计谋得逞的的笑）</p>
+
+            <p>这虽然是一个娱乐的小游戏，但是我的心是真的，我知道现在说这些其实为时尚早，但是我还是想和你时不时的提起一下</p>
+           
+            <p>我一直都知道我们是天做的一对，我们在一起已经920天，恰逢七夕节日，我想对你表达我的爱意，虽然我们现在异地，但是我们一起逛过的街、看过的电影、分享过的奶茶，甚至是偶尔拌嘴后又和好的瞬间，都是我记忆里最珍贵的片段。</p>
+            
+            <p>我不是一个很会说情话的人，但我知道，我想和你一起做很多事：想每天早上醒来看到你的睡颜，想周末和你一起逛超市买食材，想在冬天和你分享同一件外套，想陪你走过未来的每一个七夕，直到我们都老得走不动路。</p>
+            
+            <p>今天，在这个充满爱意的日子里，我想正式告诉你：我爱你，不是一时兴起，而是深思熟虑后的坚定。我想给你一个家，一个有温度、有欢笑、有我的家。</p>
+            
+            <p>往后余生，我想牵着你的手，一起看遍世间风景，一起面对所有风雨。</p>
+        </div>
+
+        <!-- 署名 -->
+        <div class="letter-signature">
+            <div class="signature-name">爱你的人：杨帆</div>
+            <div class="signature-date">2025年七夕节 于北京给你表达的爱意</div>
+        </div>
+    </div>
+
+    <script>
+        // 可选：添加页面加载完成后的心跳提示
+        window.addEventListener('load', () => {
+            // 创建一个临时的爱心弹窗
+            const heartPopup = document.createElement('div');
+            heartPopup.style.position = 'fixed';
+            heartPopup.style.top = '50%';
+            heartPopup.style.left = '50%';
+            heartPopup.style.transform = 'translate(-50%, -50%)';
+            heartPopup.style.fontSize = '3rem';
+            heartPopup.style.color = '#ff6b9e';
+            heartPopup.style.opacity = '0';
+            heartPopup.style.transition = 'opacity 0.8s ease';
+            heartPopup.innerText = '💖';
+            document.body.appendChild(heartPopup);
+
+            // 显示后消失
+            setTimeout(() => {
+                heartPopup.style.opacity = '1';
+            }, 300);
+            setTimeout(() => {
+                heartPopup.style.opacity = '0';
+                setTimeout(() => {
+                    heartPopup.remove();
+                }, 800);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
